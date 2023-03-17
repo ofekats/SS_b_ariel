@@ -41,23 +41,20 @@ PAdptArray CreateAdptArray(COPY_FUNC fc, DEL_FUNC fd,printf_FUNC fp){
 
 //delete arr
 void DeleteAdptArray(PAdptArray arr){
-    if(arr == NULL)
+    if(arr != NULL)
     {
-        printf("creat an arr first\n");
-        return;
-    }
-    if(arr->size != 0) //free each element of arr with DEL_FUNC
-    {
-        for(int i=0; i < arr->size; i++)
+        if(arr->size != 0) //free each element of arr with DEL_FUNC
         {
-            if((arr->PElement)[i] != NULL)
+            for(int i=0; i < arr->size; i++)
             {
-                arr->DEL_FUNC((arr->PElement)[i]);
+                if((arr->PElement)[i] != NULL)
+                {
+                    arr->DEL_FUNC((arr->PElement)[i]);
+                }
             }
         }
+        free(arr); //free all arr
     }
-    free(arr->PElement);
-    free(arr); //free all arr
     // printf("deleted arr!\n");
 }
 
@@ -65,10 +62,10 @@ void DeleteAdptArray(PAdptArray arr){
 Result SetAdptArrayAt(PAdptArray arr, int i, PElement elm){
     if(arr == NULL)
     {
-        printf("creat an arr first\n");
+        printf("create an arr first\n");
         return FAIL;
     }
-    if(arr->size >= i) //if i is an index already in arr
+    if(arr->size > i) //if i is an index already in arr
     {
         if((arr->PElement)[i] != NULL)
         {
@@ -83,11 +80,14 @@ Result SetAdptArrayAt(PAdptArray arr, int i, PElement elm){
             DeleteAdptArray(arr);
             return FAIL;
         }
-         for (int j = 0; j < i; j++) { // Initialize new memory with NULL values
+        for (int j = 0; j < i; j++) { // Initialize new memory with NULL values
             newArr1[j] = NULL;
         }
         memcpy(newArr1, arr->PElement, arr->size * sizeof(PElement));
-		free(arr->PElement);
+        if((arr->PElement) != NULL)
+        {
+            free(arr->PElement);
+        }
         arr->PElement = newArr1;
         arr->size = i+1; //change the size of arr
     }
@@ -97,14 +97,14 @@ Result SetAdptArrayAt(PAdptArray arr, int i, PElement elm){
     return SUCCESS;
 }
 
-//get index i and return the element in arr
+//get index i and return copy of the element in arr
 PElement GetAdptArrayAt(PAdptArray arr, int i){
     if(arr == NULL)
     {
-        printf("creat an arr first\n");
+        printf("create an arr first\n");
         return NULL;
     }
-    if(arr->size >= i)
+    if(arr->size > i)
     {
         if((arr->PElement)[i] != NULL)
         {
