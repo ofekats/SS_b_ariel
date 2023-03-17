@@ -27,7 +27,7 @@ PAdptArray CreateAdptArray(COPY_FUNC fc, DEL_FUNC fd,printf_FUNC fp){
     PAdptArray newArr = (PAdptArray)malloc(sizeof(struct AdptArray_));
     if(newArr == NULL)
     {
-        printf("faild in malloc\n");
+        printf("faild in malloc!\n");
         return NULL;
     }
     newArr->PElement = NULL;
@@ -53,6 +53,7 @@ void DeleteAdptArray(PAdptArray arr){
                 }
             }
         }
+        free(arr->PElement);
         free(arr); //free all arr
     }
     // printf("deleted arr!\n");
@@ -73,26 +74,24 @@ Result SetAdptArrayAt(PAdptArray arr, int i, PElement elm){
         }
     }
     else{ //we need more space in arr for index i
-        PElement* newArr1 = (PElement*)calloc(i + 1, sizeof(PElement));
+        PElement* newArr1 = (PElement*)realloc(arr->PElement, (i + 1) * sizeof(PElement));  
         if(newArr1 == NULL)
         {
-            printf("faild in calloc\n");
+            printf("faild in realloc!\n");
             DeleteAdptArray(arr);
             return FAIL;
         }
-        for (int j = 0; j < i; j++) { // Initialize new memory with NULL values
+        for (int j = arr->size; j < i; j++) { // Initialize new memory with NULL values
             newArr1[j] = NULL;
-        }
-        memcpy(newArr1, arr->PElement, arr->size * sizeof(PElement));
-        if((arr->PElement) != NULL)
-        {
-            free(arr->PElement);
         }
         arr->PElement = newArr1;
         arr->size = i+1; //change the size of arr
     }
-    PElement * new_elm = arr->COPY_FUNC(elm);
-    (arr->PElement)[i] = new_elm; //copy of the element by COPY_FUNC in the i place in arr
+    if(elm != NULL)
+    {
+        PElement * new_elm = arr->COPY_FUNC(elm);
+        (arr->PElement)[i] = new_elm; //copy of the element by COPY_FUNC in the i place in arr
+    }
     // printf("SetAdptArrayAt- SUCCESS!\n");
     return SUCCESS;
 }

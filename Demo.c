@@ -14,7 +14,6 @@
 #include <assert.h>
 
 int main() {
-
 	pbook b1 = creat_book("harry Potter",12345) ;
 	pbook b2= creat_book("C intro", 45678) ;
 	PAdptArray mybooks = CreateAdptArray(copy_book,delete_book,print_book);
