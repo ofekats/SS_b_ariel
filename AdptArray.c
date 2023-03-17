@@ -1,29 +1,19 @@
+#include "AdptArray.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef void* PElement;
 
 //arr struct
 typedef struct AdptArray_{
     PElement* PElement;
     void(*DEL_FUNC)(PElement);
     PElement(*COPY_FUNC)(PElement);
-    void(*printf_FUNC)(PElement);
+    void(*PRINT_FUNC)(PElement);
     int size;
 }*PAdptArray;
 
-typedef enum {
-    FAIL = 0,
-    SUCCESS=1
-}Result;
-
-typedef void(*DEL_FUNC)(PElement);
-typedef PElement(*COPY_FUNC)(PElement);
-typedef void(*printf_FUNC)(PElement);
-
 //creat new arr
-PAdptArray CreateAdptArray(COPY_FUNC fc, DEL_FUNC fd,printf_FUNC fp){
+PAdptArray CreateAdptArray(COPY_FUNC fc, DEL_FUNC fd,PRINT_FUNC fp){
     PAdptArray newArr = (PAdptArray)malloc(sizeof(struct AdptArray_));
     if(newArr == NULL)
     {
@@ -33,7 +23,7 @@ PAdptArray CreateAdptArray(COPY_FUNC fc, DEL_FUNC fd,printf_FUNC fp){
     newArr->PElement = NULL;
     newArr->COPY_FUNC = fc;
     newArr->DEL_FUNC = fd;
-    newArr->printf_FUNC = fp;
+    newArr->PRINT_FUNC = fp;
     newArr->size = 0;
     // printf("created new arr!\n");
     return newArr;
@@ -129,7 +119,7 @@ void PrintDB(PAdptArray arr){
         if ((arr->PElement)[i] != NULL)
         {
             PElement elm = (arr->PElement)[i];
-            arr->printf_FUNC(elm);
+            arr->PRINT_FUNC(elm);
         }
         
     }
